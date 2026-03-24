@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f0e8" />
+    <title>Claude Architect Exam Prep</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <div class="user-bar">
+          <div class="user-info">
+            <span class="user-avatar" id="user-avatar"></span>
+            <span id="user-display-name"></span>
+          </div>
+          <button class="logout-btn" id="logout-btn">Sign Out</button>
+        </div>
+        <h1>Claude Certified Architect</h1>
+        <p class="header-subtitle">Exam Preparation — 360 Practice Questions</p>
+        <div class="progress-bar-track">
+          <div id="progress-bar-fill" class="progress-bar-fill"></div>
+        </div>
+        <div class="score-bar">
+          <span id="progress">Question 1 / 1</span>
+          <span id="score">Score: 0 / 0</span>
+        </div>
+      </header>
+
+      <div id="topic-selector" class="card topic-selector hidden">
+        <h2>Choose a Topic</h2>
+        <p class="topic-subtitle">Select a domain to practice, or attempt all questions.</p>
+        <div id="topic-cards" class="topic-cards"></div>
+      </div>
+
+      <div id="progress-dashboard" class="card progress-dashboard hidden">
+        <h2>Your Progress</h2>
+        <p id="dashboard-domain-label" class="dashboard-domain-label"></p>
+        <div class="progress-stats">
+          <div class="stat-card">
+            <span class="stat-value" id="stat-answered">0</span>
+            <span class="stat-label">Answered</span>
+          </div>
+          <div class="stat-card stat-correct">
+            <span class="stat-value" id="stat-correct">0</span>
+            <span class="stat-label">Correct</span>
+          </div>
+          <div class="stat-card stat-wrong">
+            <span class="stat-value" id="stat-wrong">0</span>
+            <span class="stat-label">Wrong</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="stat-remaining">0</span>
+            <span class="stat-label">Remaining</span>
+          </div>
+        </div>
+        <div class="progress-ring-container">
+          <div class="progress-ring-label">
+            <span id="stat-pct">0</span>% Complete
+          </div>
+          <div class="progress-bar-track progress-overall">
+            <div id="overall-progress-fill" class="progress-bar-fill"></div>
+          </div>
+        </div>
+        <div class="progress-actions">
+          <button id="resume-btn" class="btn btn-primary">Resume Quiz</button>
+          <button id="change-topic-btn" class="btn btn-secondary">Change Topic</button>
+          <button id="reset-btn" class="btn btn-secondary btn-danger">Reset Progress</button>
+        </div>
+      </div>
+
+      <main id="quiz-container">
+        <div id="question-card" class="card">
+          <h2 id="question-number" class="question-number"></h2>
+          <p id="question-text" class="question-text"></p>
+
+          <div id="options" class="options"></div>
+
+          <div id="explanation-box" class="explanation-box hidden">
+            <div id="result-banner" class="result-banner"></div>
+            <div class="explanation-content">
+              <h3>Explanation</h3>
+              <p id="correct-explanation" class="correct-explanation"></p>
+              <div id="wrong-explanations" class="wrong-explanations"></div>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button id="prev-btn" class="btn btn-secondary" disabled>
+              ← Previous
+            </button>
+            <button id="next-btn" class="btn btn-primary" disabled>
+              Next →
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <div id="results-screen" class="card hidden">
+        <h2>Quiz Complete!</h2>
+        <div class="final-score">
+          <span id="final-score-value">0</span> /
+          <span id="total-questions">0</span>
+        </div>
+        <p id="final-message" class="final-message"></p>
+        <div class="results-breakdown" id="results-breakdown"></div>
+        <button id="restart-btn" class="btn btn-primary">Restart Quiz</button>
+        <button id="change-topic-btn-2" class="btn btn-secondary" style="display:block;margin:10px auto 0;">Change Topic</button>
+        <button id="back-to-dash-btn" class="btn btn-secondary" style="display:block;margin:10px auto 0;">View Progress</button>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

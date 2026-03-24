@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f0e8" />
+    <title>Sign In — Claude Architect Exam Prep</title>
+    <link rel="stylesheet" href="login.css" />
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  </head>
+  <body>
+    <div class="login-page">
+      <div class="login-left">
+        <div class="brand-content">
+          <div class="brand-badge">Anthropic Academy</div>
+          <h1>Claude Certified Architect</h1>
+          <p class="brand-subtitle">Practice Exam Preparation</p>
+          <div class="feature-list">
+            <div class="feature-item">
+              <span class="feature-icon">📝</span>
+              <div>
+                <strong>360 Practice Questions</strong>
+                <span>Across 6 real-world scenarios</span>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">📊</span>
+              <div>
+                <strong>Track Your Progress</strong>
+                <span>Save and resume anytime</span>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="feature-icon">💡</span>
+              <div>
+                <strong>Detailed Explanations</strong>
+                <span>Learn why each answer is correct</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="login-right">
+        <div class="login-card">
+          <h2 id="form-title">Sign In</h2>
+          <p id="form-subtitle" class="form-subtitle">Welcome back! Continue your exam prep.</p>
+
+          <div id="error-msg" class="error-msg hidden"></div>
+
+          <form id="login-form" autocomplete="on">
+            <div id="name-field" class="form-group hidden">
+              <label for="displayName">Full Name</label>
+              <input type="text" id="displayName" placeholder="Your name" autocomplete="name" />
+            </div>
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" id="username" placeholder="Enter username" autocomplete="username" required />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" placeholder="Enter password" autocomplete="current-password" required />
+            </div>
+            <button type="submit" id="submit-btn" class="btn-submit">Sign In</button>
+          </form>
+
+          <p class="toggle-text">
+            <span id="toggle-msg">Don't have an account?</span>
+            <a href="#" id="toggle-link">Create one</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        let isLogin = true;
+        let paymentRequired = false;
+        let razorpayKeyId = null;
+        let priceLabel = "";
+        let priceAmount = 0;
+        let priceCurrency = "INR";
+        const form = document.getElementById("login-form");
+        const title = document.getElementById("form-title");
+        const subtitle = document.getElementById("form-subtitle");
+        const nameField = document.getElementById("name-field");
+        const submitBtn = document.getElementById("submit-btn");
+        const toggleMsg = document.getElementById("toggle-msg");
+        const toggleLink = document.getElementById("toggle-link");
+        const errorMsg = document.getElementById("error-msg");
+
+        // Check if payments are enabled
+        fetch("/api/config").then(r => r.json()).then(cfg => {
+          paymentRequired = cfg.paymentRequired;
+          razorpayKeyId = cfg.razorpayKeyId;
+          priceAmount = cfg.priceAmount;
+          priceCurrency = cfg.priceCurrency;
+          if (paymentRequired) {
+            const sym = priceCurrency === "INR" ? "\u20B9" : priceCurrency + " ";
+            priceLabel = ` \u2014 ${sym}${(priceAmount / 100).toFixed(0)}`;
+          }
+        }).catch(() => {});
+
+        function updateFormLabels() {
+          errorMsg.classList.add("hidden");
+          if (isLogin) {
+            title.textContent = "Sign In";
+            subtitle.textContent = "Welcome back! Continue your exam prep.";
+            nameField.classList.add("hidden");
+            submitBtn.textContent = "Sign In";
+            toggleMsg.textContent = "Don't have an account?";
+            toggleLink.textContent = "Create one";
+          } else {
+            title.textContent = "Create Account";
+            subtitle.textContent = paymentRequired
+              ? "One-time payment for lifetime access."
+              : "Start your certification journey.";
+            nameField.classList.remove("hidden");
+            submitBtn.textContent = paymentRequired
+              ? "Pay & Create Account" + priceLabel
+              : "Create Account";
+            toggleMsg.textContent = "Already have an account?";
+            toggleLink.textContent = "Sign in";
+          }
+        }
+
+        toggleLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          isLogin = !isLogin;
+          updateFormLabels();
+        });
+
+        function showError(msg) {
+          errorMsg.textContent = msg;
+          errorMsg.classList.remove("hidden");
+        }
+
+        function openRazorpay(orderId, pendingId, displayName) {
+          const options = {
+            key: razorpayKeyId,
+            amount: priceAmount,
+            currency: priceCurrency,
+            name: "Claude Certified Architect",
+            description: "360 Practice Questions — Exam Prep",
+            order_id: orderId,
+            handler: async function (response) {
+              // Verify payment on server
+              submitBtn.disabled = true;
+              submitBtn.textContent = "Verifying payment...";
+              try {
+                const res = await fetch("/api/verify-payment", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature,
+                    pendingId,
+                  }),
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                  showError(data.error || "Payment verification failed");
+                  return;
+                }
+                window.location.href = "/quiz";
+              } catch (_) {
+                showError("Connection error during verification.");
+              } finally {
+                submitBtn.disabled = false;
+                updateFormLabels();
+              }
+            },
+            prefill: { name: displayName },
+            theme: { color: "#4a6741" },
+            modal: {
+              ondismiss: function () {
+                submitBtn.disabled = false;
+                updateFormLabels();
+              },
+            },
+          };
+          const rzp = new Razorpay(options);
+          rzp.open();
+        }
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          errorMsg.classList.add("hidden");
+          submitBtn.disabled = true;
+          submitBtn.textContent = isLogin ? "Signing in..." : "Processing...";
+
+          const username = document.getElementById("username").value.trim();
+          const password = document.getElementById("password").value;
+          const displayName = document.getElementById("displayName").value.trim();
+
+          try {
+            if (isLogin) {
+              const res = await fetch("/api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password }),
+              });
+              const data = await res.json();
+              if (!res.ok) { showError(data.error || "Something went wrong"); return; }
+              window.location.href = "/quiz";
+            } else if (paymentRequired) {
+              // Create Razorpay order, then open checkout modal
+              const res = await fetch("/api/create-order", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password, displayName }),
+              });
+              const data = await res.json();
+              if (!res.ok) { showError(data.error || "Something went wrong"); return; }
+              openRazorpay(data.orderId, data.pendingId, displayName);
+              return; // don't re-enable button — modal handles it
+            } else {
+              const res = await fetch("/api/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password, displayName }),
+              });
+              const data = await res.json();
+              if (!res.ok) { showError(data.error || "Something went wrong"); return; }
+              window.location.href = "/quiz";
+            }
+          } catch (err) {
+            showError("Connection error. Please try again.");
+          } finally {
+            submitBtn.disabled = false;
+            updateFormLabels();
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
