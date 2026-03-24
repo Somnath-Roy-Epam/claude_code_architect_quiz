@@ -55,6 +55,7 @@
   const topicCards = document.getElementById("topic-cards");
   const changeTopicBtn = document.getElementById("change-topic-btn");
   const changeTopicBtn2 = document.getElementById("change-topic-btn-2");
+  const homeBtn = document.getElementById("home-btn");
 
   // --- Filtering ---
   function applyFilter(domainId) {
@@ -480,6 +481,13 @@
 
   if (changeTopicBtn2) {
     changeTopicBtn2.addEventListener("click", () => {
+      saveProgress();
+      showTopicSelector();
+    });
+  }
+
+  if (homeBtn) {
+    homeBtn.addEventListener("click", () => {
       saveProgress();
       showTopicSelector();
     });

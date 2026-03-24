@@ -665,6 +665,13 @@ header h1 {
   margin-bottom: 16px;
 }
 
+.btn-home {
+  padding: 10px 14px;
+  font-size: 1.1rem;
+  line-height: 1;
+  min-width: auto;
+}
+
 /* Danger button style for reset */
 .btn-danger {
   color: #991b1b;

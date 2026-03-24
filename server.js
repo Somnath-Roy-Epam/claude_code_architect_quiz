@@ -280,7 +280,7 @@ function validateRegistration(username, displayName, password) {
   if (!username || !password || !displayName) return "All fields are required";
   if (username.length < 3 || username.length > 30) return "Username must be 3-30 characters";
   if (password.length < 6) return "Password must be at least 6 characters";
-  if (!/^[a-zA-Z0-9_]+$/.test(username)) return "Username: letters, numbers, underscore only";
+  if (!/^[a-zA-Z0-9._-]+$/.test(username)) return "Username: letters, numbers, dot, hyphen, underscore only";
   return null;
 }
 
