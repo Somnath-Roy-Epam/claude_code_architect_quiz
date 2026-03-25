@@ -43,7 +43,7 @@ test.describe("Quiz App", () => {
     await expect(page.locator("h1")).toContainText("Claude Certified Architect");
     await expect(page.locator("#question-number")).toContainText("Question 1");
     await expect(page.locator("#question-text")).not.toBeEmpty();
-    await expect(page.locator("#progress")).toContainText("Question 1 / 360");
+    await expect(page.locator("#progress")).toContainText("Question 1 / 126");
   });
 
   test("displays all 4 answer options", async ({ page }) => {
@@ -82,7 +82,7 @@ test.describe("Quiz App", () => {
     await page.locator('.option-btn[data-key="B"]').click();
     await page.locator("#next-btn").click();
     await expect(page.locator("#question-number")).toContainText("Question 2");
-    await expect(page.locator("#progress")).toContainText("Question 2 / 360");
+    await expect(page.locator("#progress")).toContainText("Question 2 / 126");
   });
 
   test("answering and going back preserves state", async ({ page }) => {

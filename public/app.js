@@ -1,7 +1,7 @@
 (() => {
   // --- Domain definitions ---
   const DOMAINS = [
-    { id: 0, name: "All Domains", desc: "All 360 practice questions", icon: "\uD83D\uDCDA" },
+    { id: 0, name: "All Domains", desc: "All 126 practice questions", icon: "\uD83D\uDCDA" },
     { id: 1, name: "Agentic Architecture & Orchestration", desc: "Agent loops, multi-agent coordination, error handling", icon: "\uD83C\uDFD7\uFE0F" },
     { id: 2, name: "Tool Design & MCP Integration", desc: "Tool descriptions, MCP config, tool distribution", icon: "\uD83D\uDD27" },
     { id: 3, name: "Claude Code Configuration & Workflows", desc: "CLAUDE.md, rules, commands, skills", icon: "\u2699\uFE0F" },
@@ -9,13 +9,12 @@
     { id: 5, name: "Context Management & Reliability", desc: "Context windows, token optimization, escalation", icon: "\uD83E\uDDE0" },
   ];
 
-  // Each scenario has 60 questions: 16 + 11 + 12 + 12 + 9
+  // Domain boundaries: D1=1-26, D2=27-41, D3=42-71, D4=72-100, D5=101-126
   function getDomain(questionId) {
-    const offset = (questionId - 1) % 60;
-    if (offset < 16) return 1;
-    if (offset < 27) return 2;
-    if (offset < 39) return 3;
-    if (offset < 51) return 4;
+    if (questionId <= 26) return 1;
+    if (questionId <= 41) return 2;
+    if (questionId <= 71) return 3;
+    if (questionId <= 100) return 4;
     return 5;
   }
 
