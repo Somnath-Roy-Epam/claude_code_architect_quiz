@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd \"c:\\\\Users\\\\Somnath_Roy\\\\OneDrive - EPAM\\\\office\\\\projects\\\\Quiz\"; node -e \"const q=require\\('\\./questions\\.js'\\); console\\.log\\('Total questions:', q\\.length\\); const fs=require\\('fs'\\); const content=fs\\.readFileSync\\('questions\\.js','utf8'\\); console\\.log\\('Total lines:', content\\.split\\('\\\\n'\\)\\.length\\);\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

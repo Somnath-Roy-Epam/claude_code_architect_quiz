@@ -4,7 +4,7 @@ const { test, expect } = require("@playwright/test");
 async function loginTestUser(page) {
   const uid = "tester_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
   // Register via API
-  await page.goto("http://localhost:8080/login");
+  await page.goto("/login");
   const regRes = await page.evaluate(async (u) => {
     const r = await fetch("/api/register", {
       method: "POST",
@@ -16,7 +16,7 @@ async function loginTestUser(page) {
   if (!regRes) {
     throw new Error("Failed to register test user");
   }
-  await page.goto("http://localhost:8080/quiz");
+  await page.goto("/quiz");
   // Select "All Domains" from topic selector
   await page.waitForSelector("#topic-selector");
   await page.locator(".topic-card").first().click();
@@ -43,7 +43,7 @@ test.describe("Quiz App", () => {
     await expect(page.locator("h1")).toContainText("Claude Certified Architect");
     await expect(page.locator("#question-number")).toContainText("Question 1");
     await expect(page.locator("#question-text")).not.toBeEmpty();
-    await expect(page.locator("#progress")).toContainText("Question 1 / 126");
+    await expect(page.locator("#progress")).toContainText("Question 1 / 130");
   });
 
   test("displays all 4 answer options", async ({ page }) => {
@@ -82,7 +82,7 @@ test.describe("Quiz App", () => {
     await page.locator('.option-btn[data-key="B"]').click();
     await page.locator("#next-btn").click();
     await expect(page.locator("#question-number")).toContainText("Question 2");
-    await expect(page.locator("#progress")).toContainText("Question 2 / 126");
+    await expect(page.locator("#progress")).toContainText("Question 2 / 130");
   });
 
   test("answering and going back preserves state", async ({ page }) => {
